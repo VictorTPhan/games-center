@@ -1,0 +1,494 @@
+/* Pixel Party — shared styles.
+   Borrowed straight from the games: the sunset sky, the cream HUD chips with
+   burnt-orange borders, Press Start 2P lettering, and the blue ground tiles. */
+
+:root {
+  --sky-top: #ff8a2b;
+  --sky-bottom: #fff3b0;
+  --ink: #1f2a37;
+  --muted: #4b5c6b;
+  --cream: #fffdf8;
+  --cream-deep: #ffe8ba;
+  --accent: #e85d04;
+  --accent-dark: #c44d03;
+  --coin: #f7d21e;
+  --coin-dark: #c9a008;
+  --tile: #2f7de0;
+  --tile-dark: #1d5fb8;
+  --shadow: rgba(31, 42, 55, 0.18);
+  --pixel: "Press Start 2P", monospace;
+  --round: "Arial Rounded MT Bold", "Avenir Next Rounded", "Century Gothic", "Nunito", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--sky-top);
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--round);
+  line-height: 1.45;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---------- HUD chip: the cream panel every game draws in its corners ---------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 2px solid var(--accent-dark);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(255, 232, 186, 0.92));
+  color: var(--ink);
+  font-family: var(--pixel);
+  font-size: 11px;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.chip,
+button.chip {
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--accent-dark);
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 120ms ease;
+}
+
+a.chip:hover,
+button.chip:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--accent-dark);
+}
+
+a.chip:active,
+button.chip:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--accent-dark);
+}
+
+button.chip {
+  appearance: none;
+}
+
+.coin {
+  width: 12px;
+  height: 16px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--coin);
+  box-shadow: inset -3px 0 0 var(--coin-dark);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.9em;
+  padding: 4px 6px 3px;
+  border: 1px solid #b8c5d0;
+  border-bottom-width: 3px;
+  border-radius: 5px;
+  background: #f4f7fa;
+  color: var(--ink);
+  font-family: var(--pixel);
+  font-size: 9px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+kbd + kbd {
+  margin-left: 3px;
+}
+
+/* ================================ MENU PAGE ================================ */
+
+.menu {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255, 248, 232, 0.65) 0%, transparent 45%),
+    linear-gradient(180deg, var(--sky-top) 0%, #ffb04d 45%, var(--sky-bottom) 100%);
+}
+
+/* Drifting sky blocks, like the white squares behind every level. */
+.sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sky span {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 3px;
+  animation: drift linear infinite;
+}
+
+@keyframes drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-110vw); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky span { animation: none; }
+}
+
+.topbar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 22px 20px 0;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--pixel);
+  font-size: clamp(16px, 3.4vw, 26px);
+  letter-spacing: 1px;
+  text-shadow: 3px 3px 0 var(--accent-dark), 0 0 0 transparent;
+}
+
+.logo img {
+  width: clamp(36px, 6vw, 52px);
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(3px 3px 0 rgba(196, 77, 3, 0.55));
+  animation: hop 2.4s ease-in-out infinite;
+}
+
+@keyframes hop {
+  0%, 70%, 100% { transform: translateY(0); }
+  80% { transform: translateY(-8px); }
+  90% { transform: translateY(0) scaleY(0.92); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo img { animation: none; }
+}
+
+.games {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 34px 20px 72px;
+}
+
+.games h1 {
+  margin: 0 0 22px;
+  color: var(--ink);
+  font-family: var(--pixel);
+  font-size: clamp(13px, 2vw, 16px);
+  letter-spacing: 1px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 980px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Game card ---------- */
+
+.card {
+  --tint: var(--tile);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 3px solid #fff;
+  border-radius: 14px;
+  background: var(--cream);
+  box-shadow: 0 6px 0 rgba(196, 77, 3, 0.35), 0 14px 30px var(--shadow);
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 0 rgba(196, 77, 3, 0.35), 0 20px 36px var(--shadow);
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.shot {
+  position: relative;
+  aspect-ratio: 20 / 11;
+  background: var(--tint);
+  overflow: hidden;
+}
+
+.shot img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The captures carry a thin white frame; zoom just past it. */
+  transform: scale(1.03);
+}
+
+.shot .moving {
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.card:hover .shot .moving,
+.card:focus-visible .shot .moving {
+  opacity: 1;
+}
+
+.shot .ribbon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 9px;
+  padding: 7px 9px;
+}
+
+.card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 18px 20px;
+  border-top: 5px solid var(--tint);
+}
+
+.card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card h2 {
+  margin: 0;
+  font-family: var(--pixel);
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.genre {
+  flex: none;
+  color: var(--tint);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.best {
+  font-size: 9px;
+  padding: 8px 10px;
+}
+
+.play {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--pixel);
+  font-size: 11px;
+  box-shadow: 0 4px 0 var(--accent-dark);
+}
+
+.card:hover .play {
+  filter: brightness(1.06);
+}
+
+.play::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid #fff;
+}
+
+/* ---------- Ground: the blue brick floor from Flag Rush ---------- */
+
+.ground {
+  position: relative;
+  z-index: 1;
+  height: 64px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.28) 2px, transparent 2px) 0 0 / 32px 32px,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28) 2px, transparent 2px) 0 0 / 32px 32px,
+    linear-gradient(180deg, var(--tile) 0%, var(--tile-dark) 100%);
+  border-top: 3px solid #5d9cf0;
+  color: #fff;
+  font-family: var(--pixel);
+  font-size: 9px;
+  display: grid;
+  place-items: center;
+  letter-spacing: 1px;
+}
+
+/* ================================ PLAY PAGE ================================ */
+
+.play-page {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Each play page matches the backdrop its game already draws around itself. */
+.play-page[data-game="flag-rush"] {
+  background:
+    radial-gradient(ellipse at 20% 0%, #fff8e8 0%, transparent 45%),
+    linear-gradient(180deg, #eef6fb 0%, #d9ebf5 100%);
+}
+
+.play-page[data-game="bun-survivor"] {
+  background:
+    radial-gradient(ellipse at 20% 0%, #fff8e8 0%, transparent 45%),
+    linear-gradient(180deg, #f6effb 0%, #e8d9f5 100%);
+}
+
+.play-page[data-game="bun-express"] {
+  background:
+    radial-gradient(ellipse at 20% 0%, #fff8e8 0%, transparent 45%),
+    linear-gradient(180deg, #fff0f6 0%, #fbd9e8 100%);
+}
+
+.play-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 0;
+}
+
+.play-bar .title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--pixel);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.play-bar .title img {
+  width: 26px;
+  image-rendering: pixelated;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin: 0 0 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.controls li {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.controls .or {
+  margin: 0 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.controls .label {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.play-bar .next {
+  margin-left: 4px;
+}
+
+.frame {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: 0;
+  display: block;
+  background: transparent;
+}
+
+@media (max-width: 860px) {
+  .controls { display: none; }
+  .play-bar .title { margin-right: auto; }
+}
+
+@media (max-width: 480px) {
+  .play-bar .title span { display: none; }
+  .play-bar .next .full { display: none; }
+}

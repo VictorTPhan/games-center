@@ -1,0 +1,49 @@
+:root {
+  --sky-top: #ff8a2b;
+  --sky-bottom: #fff3b0;
+  --ink: #1f2a37;
+  --shadow: rgba(31, 42, 55, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  color: var(--ink);
+  font-family: "Arial Rounded MT Bold", "Avenir Next Rounded", "Century Gothic", sans-serif;
+  background:
+    radial-gradient(ellipse at 20% 0%, #fff8e8 0%, transparent 45%),
+    linear-gradient(180deg, #fff0f6 0%, #fbd9e8 100%);
+}
+
+.app {
+  /* Fit as large as possible while keeping the 20:11 game aspect ratio. */
+  width: min(96vw, calc((100vh - 24px) * 20 / 11));
+}
+
+.stage-wrap {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px var(--shadow);
+  border: 2px solid #ffffff;
+  background: #000;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 20 / 11;
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+  cursor: pointer;
+  user-select: none;
+  /* Swipes steer the bun instead of scrolling the page. */
+  touch-action: none;
+}

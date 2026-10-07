@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel Party</title>
+  <meta name="description" content="Quick browser games you can play right now." />
+  <link rel="icon" type="image/svg+xml" href="assets/bun.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/site.css" />
+</head>
+<body class="menu">
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="logo" href="index.html">
+      <img src="assets/bun.svg" alt="" width="52" height="52" />
+      PIXEL PARTY
+    </a>
+    <button class="chip" id="random" type="button">
+      <span class="coin" aria-hidden="true"></span>RANDOM GAME
+    </button>
+  </header>
+
+  <main class="games">
+    <h1>CHOOSE A GAME</h1>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <footer class="ground">PIXEL PARTY</footer>
+
+  <script src="assets/games.js"></script>
+  <script>
+    const grid = document.getElementById("grid");
+    const lastPlayed = readStore(LAST_PLAYED_KEY);
+
+    grid.innerHTML = PIXEL_PARTY_GAMES.map((game) => {
+      const best = bestScoreText(game);
+      const ribbon = game.id === lastPlayed
+        ? `<span class="chip ribbon">LAST PLAYED</span>`
+        : "";
+      return `
+        <a class="card" href="${game.page}" style="--tint: ${game.tint}">
+          <div class="shot">
+            <img src="assets/${game.id}.jpg" alt="" loading="lazy" />
+            <img class="moving" src="assets/${game.id}.webp" alt="" loading="lazy" />
+            ${ribbon}
+          </div>
+          <div class="card-body">
+            <div class="card-head">
+              <h2>${game.title}</h2>
+              <span class="genre">${game.genre}</span>
+            </div>
+            <p>${game.blurb}</p>
+            <div class="card-foot">
+              ${best ? `<span class="chip best"><span class="coin" aria-hidden="true"></span>BEST ${best}</span>` : ""}
+              <span class="play">PLAY</span>
+            </div>
+          </div>
+        </a>`;
+    }).join("");
+
+    document.getElementById("random").addEventListener("click", () => {
+      const pick = PIXEL_PARTY_GAMES[Math.floor(Math.random() * PIXEL_PARTY_GAMES.length)];
+      location.href = pick.page;
+    });
+
+    // Sky blocks drifting right-to-left, sized like the clouds in the games.
+    const sky = document.querySelector(".sky");
+    for (let i = 0; i < 14; i++) {
+      const block = document.createElement("span");
+      const size = 10 + Math.random() * 26;
+      const duration = 40 + Math.random() * 50;
+      block.style.width = block.style.height = `${size}px`;
+      block.style.top = `${Math.random() * 70}%`;
+      block.style.left = `${Math.random() * 110}%`;
+      block.style.animationDuration = `${duration}s`;
+      block.style.animationDelay = `${-Math.random() * duration}s`;
+      sky.appendChild(block);
+    }
+  </script>
+</body>
+</html>
