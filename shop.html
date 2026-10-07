@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pixel Party</title>
+  <title>Shop | Pixel Party</title>
   <link rel="icon" type="image/svg+xml" href="assets/bun.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,11 +12,26 @@
   <link rel="stylesheet" href="assets/site.css" />
   <script src="assets/party.js"></script>
 </head>
-<body class="play-page" data-game="flag-rush">
+<body class="menu">
+  <canvas id="sky" aria-hidden="true"></canvas>
   <header class="site-header" id="site-header"></header>
-  <iframe class="frame" id="frame" allow="autoplay; fullscreen"></iframe>
+
+  <main class="games shop">
+    <h1 class="visually-hidden">Shop</h1>
+    <section aria-labelledby="skins-heading">
+      <h2 class="visually-hidden" id="skins-heading">Bun skins</h2>
+      <div class="grid shop-grid" id="skins"></div>
+    </section>
+    <section aria-labelledby="themes-heading">
+      <h2 class="visually-hidden" id="themes-heading">Site themes</h2>
+      <div class="grid shop-grid" id="themes"></div>
+    </section>
+  </main>
+
+  <footer class="ground" aria-hidden="true"></footer>
 
   <script src="assets/games.js"></script>
-  <script src="assets/play.js"></script>
+  <script src="assets/sky.js"></script>
+  <script src="assets/shop.js"></script>
 </body>
 </html>

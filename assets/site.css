@@ -13,8 +13,70 @@
   --tile-dark: #1d5fb8;
   --shadow: rgba(31, 42, 55, 0.18);
   --hud: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(255, 232, 186, 0.92));
+  --hud-border: var(--accent-dark);
+  --surface: var(--cream);
+  --page: #ff8a2b;
+  --good: #2a9d8f;
+  --card-drop: 0 6px 0 rgba(196, 77, 3, 0.35), 0 14px 30px var(--shadow);
+  --card-drop-hover: 0 10px 0 rgba(196, 77, 3, 0.35), 0 20px 36px var(--shadow);
+  --r-card: 14px;
+  --r-btn: 8px;
+  --r-pill: 999px;
   --pixel: "Press Start 2P", monospace;
   --body: "Outfit", system-ui, sans-serif;
+}
+
+/* ---------- Shop themes (set on <html data-theme> by party.js) ---------- */
+
+[data-theme="night"] {
+  --ink: #f3eeff;
+  --muted: #c4bbe6;
+  --surface: #24204b;
+  --page: #14123a;
+  --hud: linear-gradient(180deg, #282354, #1b183e);
+  --hud-border: #8b6fe0;
+  --tile: #3b4fb8;
+  --tile-dark: #232f7a;
+  --card-drop: 0 6px 0 rgba(8, 6, 28, 0.55), 0 14px 30px rgba(0, 0, 0, 0.35);
+  --card-drop-hover: 0 10px 0 rgba(8, 6, 28, 0.55), 0 20px 36px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="retro"] {
+  --body: "Press Start 2P", monospace;
+  --r-card: 0;
+  --r-btn: 0;
+  --r-pill: 0;
+  --card-drop: 6px 6px 0 var(--accent-dark);
+  --card-drop-hover: 9px 9px 0 var(--accent-dark);
+}
+
+/* Retro: CRT scanlines over everything, and pixel text sized down to stay readable. */
+[data-theme="retro"] body:not(.play-page)::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(31, 42, 55, 0.07) 0 2px, transparent 2px 4px);
+}
+
+[data-theme="retro"] .card p,
+[data-theme="retro"] .best,
+[data-theme="retro"] .wallet {
+  font-size: 11px;
+  line-height: 1.9;
+}
+
+[data-theme="retro"] .site-nav a,
+[data-theme="retro"] .play,
+[data-theme="retro"] .buy,
+[data-theme="retro"] .use,
+[data-theme="retro"] .equipped {
+  font-size: 11px;
+}
+
+[data-theme="retro"] .shot img {
+  image-rendering: pixelated;
 }
 
 * {
@@ -22,7 +84,7 @@
 }
 
 html {
-  background: #ff8a2b;
+  background: var(--page);
 }
 
 body {
@@ -75,7 +137,7 @@ img {
   gap: 24px;
   padding: 10px max(16px, calc((100% - 1180px) / 2 + 20px));
   background: var(--hud);
-  border-bottom: 2px solid var(--accent-dark);
+  border-bottom: 2px solid var(--hud-border);
   box-shadow: 0 4px 14px var(--shadow);
 }
 
@@ -90,7 +152,8 @@ img {
   color: var(--ink);
 }
 
-.logo img {
+.logo-bun svg {
+  display: block;
   width: 40px;
   height: auto;
 }
@@ -102,8 +165,11 @@ img {
 }
 
 .site-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 14px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-weight: 600;
   font-size: 16px;
   text-decoration: none;
@@ -122,6 +188,61 @@ img {
   background: var(--tint);
 }
 
+.site-nav .shop-link {
+  --tint: var(--accent);
+}
+
+.site-nav .material-symbols-rounded {
+  font-size: 19px;
+}
+
+/* Token wallet: a HUD panel like the coin counters in the games. */
+.wallet {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 42px;
+  padding: 0 14px 0 10px;
+  border: 2px solid var(--hud-border);
+  border-radius: var(--r-btn);
+  background: var(--hud);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wallet > .material-symbols-rounded {
+  font-size: 24px;
+  color: #d9a400;
+}
+
+.wallet.bump {
+  animation: bump 320ms ease;
+}
+
+@keyframes bump {
+  40% { transform: scale(1.12); }
+}
+
+.token-pop {
+  position: absolute;
+  top: -6px;
+  right: 6px;
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 16px;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+  animation: token-pop 1100ms ease-out forwards;
+}
+
+@keyframes token-pop {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-26px); }
+}
+
 .header-actions {
   display: flex;
   gap: 10px;
@@ -136,8 +257,8 @@ img {
   width: 42px;
   height: 42px;
   padding: 0;
-  border: 2px solid var(--accent-dark);
-  border-radius: 8px;
+  border: 2px solid var(--hud-border);
+  border-radius: var(--r-btn);
   background: var(--hud);
   color: var(--accent-dark);
   cursor: pointer;
@@ -173,7 +294,7 @@ img {
   }
 
   .site-nav a {
-    padding: 6px 10px;
+    padding: 6px 8px;
     font-size: 15px;
   }
 
@@ -228,9 +349,9 @@ img {
   --tint: var(--tile);
   display: flex;
   flex-direction: column;
-  border-radius: 14px;
-  background: var(--cream);
-  box-shadow: 0 6px 0 rgba(196, 77, 3, 0.35), 0 14px 30px var(--shadow);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  box-shadow: var(--card-drop);
   overflow: hidden;
   text-decoration: none;
   transition: transform 140ms ease, box-shadow 140ms ease;
@@ -239,7 +360,7 @@ img {
 .card:hover,
 .card:focus-visible {
   transform: translateY(-4px);
-  box-shadow: 0 10px 0 rgba(196, 77, 3, 0.35), 0 20px 36px var(--shadow);
+  box-shadow: var(--card-drop-hover);
 }
 
 .card:focus-visible {
@@ -325,7 +446,7 @@ img {
   gap: 4px;
   margin-left: auto;
   padding: 9px 20px 9px 14px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--accent);
   color: #fff;
   font-weight: 700;
@@ -339,6 +460,219 @@ img {
 
 .card:hover .play {
   filter: brightness(1.06);
+}
+
+/* ================================ SHOP ================================ */
+
+.shop section + section {
+  margin-top: 48px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  box-shadow: var(--card-drop);
+  overflow: hidden;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--card-drop-hover);
+}
+
+.item.is-equipped {
+  outline: 3px solid var(--good);
+  outline-offset: -3px;
+}
+
+.item.just-bought {
+  animation: bought 480ms ease;
+}
+
+@keyframes bought {
+  30% { transform: scale(1.04) rotate(-1deg); }
+  60% { transform: scale(0.98) rotate(0.5deg); }
+}
+
+.item-preview {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* Skin previews sit on the games' sunset sky with its tile grid. */
+.skin-preview {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.22) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(180deg, #ff8a2b 0%, #ffc857 55%, #fff3b0 100%);
+}
+
+.skin-preview svg {
+  width: 30%;
+  height: auto;
+  filter: drop-shadow(0 6px 0 rgba(196, 77, 3, 0.25));
+}
+
+.item:hover .skin-preview svg {
+  animation: hop 700ms ease-in-out infinite;
+}
+
+@keyframes hop {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(-12px); }
+  70% { transform: translateY(0) scaleY(0.94); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item:hover .skin-preview svg { animation: none; }
+}
+
+/* Theme previews: a tiny version of the site in that theme. */
+.theme-preview {
+  place-items: initial;
+  align-content: start;
+  gap: 14%;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--preview-sky);
+}
+
+.tp-header {
+  height: 22px;
+  background: linear-gradient(180deg, #fffdf8, #ffe8ba);
+  border-bottom: 2px solid #c44d03;
+}
+
+.tp-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8%;
+  padding: 0 10%;
+}
+
+.tp-cards i {
+  aspect-ratio: 3 / 4;
+  border-radius: 6px;
+  background: #fffdf8;
+  box-shadow: 0 4px 0 rgba(196, 77, 3, 0.35);
+}
+
+.theme-preview[data-preview="night"] .tp-header {
+  background: linear-gradient(180deg, #28234f, #1b183e);
+  border-color: #8b6fe0;
+}
+
+.theme-preview[data-preview="night"] .tp-cards i {
+  background: #24204b;
+  box-shadow: 0 4px 0 rgba(8, 6, 28, 0.55);
+}
+
+.theme-preview[data-preview="night"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle, #fff6c2 1.5px, transparent 2px) 12px 30px / 70px 46px,
+    radial-gradient(circle, #fff6c2 1px, transparent 1.5px) 44px 52px / 90px 38px;
+  opacity: 0.8;
+}
+
+.theme-preview[data-preview="retro"] .tp-cards i {
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #c44d03;
+}
+
+.theme-preview[data-preview="retro"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(31, 42, 55, 0.12) 0 2px, transparent 2px 4px);
+}
+
+.item-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+}
+
+.item h3 {
+  margin: 0;
+  font-family: var(--pixel);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.buy,
+.use {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  border-radius: var(--r-pill);
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 120ms ease;
+}
+
+.buy {
+  padding: 8px 16px 8px 12px;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--accent-dark);
+}
+
+.buy .material-symbols-rounded {
+  font-size: 20px;
+}
+
+.buy:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.buy:active:not(:disabled),
+.use:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--accent-dark);
+}
+
+.buy:disabled {
+  background: #c9d0d8;
+  color: #6b7785;
+  box-shadow: 0 4px 0 #a9b2bc;
+  cursor: not-allowed;
+}
+
+.use {
+  padding: 8px 18px;
+  border: 2px solid var(--hud-border);
+  background: var(--hud);
+  color: var(--accent-dark);
+  box-shadow: 0 3px 0 var(--hud-border);
+}
+
+.equipped {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  color: var(--good);
+  font-weight: 700;
+  font-size: 16px;
 }
 
 /* ---------- Ground: the blue brick floor from Flag Rush ---------- */
@@ -388,4 +722,13 @@ img {
   border: 0;
   display: block;
   background: transparent;
+}
+
+/* Small phones: keep logo, wallet, and buttons on one row above the nav. */
+@media (max-width: 480px) {
+  .logo { gap: 8px; font-size: 11px; }
+  .logo-bun svg { width: 30px; }
+  .header-actions { gap: 6px; }
+  .icon-btn { width: 38px; height: 38px; }
+  .wallet { height: 38px; padding: 0 10px 0 7px; font-size: 15px; }
 }

@@ -63,19 +63,25 @@ function icon(name) {
   return `<span class="material-symbols-rounded" aria-hidden="true">${name}</span>`;
 }
 
+// currentId is a game id, "shop", or null on the menu.
 function renderHeader(currentId) {
   const links = PIXEL_PARTY_GAMES.map((g) => {
     const current = g.id === currentId ? ` aria-current="page"` : "";
     return `<a href="${g.page}" style="--tint: ${g.tint}"${current}>${g.title}</a>`;
   }).join("");
+  const shopCurrent = currentId === "shop" ? ` aria-current="page"` : "";
 
   document.getElementById("site-header").innerHTML = `
     <a class="logo" href="index.html" aria-label="Pixel Party home">
-      <img src="assets/bun.svg" alt="" width="40" height="42" />
+      <span class="logo-bun" id="logo-bun"></span>
       <span>PIXEL PARTY</span>
     </a>
-    <nav class="site-nav" aria-label="Games">${links}</nav>
+    <nav class="site-nav" aria-label="Site">
+      ${links}
+      <a href="shop.html" class="shop-link"${shopCurrent}>${icon("storefront")}Shop</a>
+    </nav>
     <div class="header-actions">
+      <span class="wallet" id="wallet" role="status"></span>
       <button class="icon-btn" id="mute" type="button" aria-label="Mute" title="Mute"></button>
       <button class="icon-btn" id="random" type="button" aria-label="Random game" title="Random game">
         ${icon("shuffle")}
@@ -101,4 +107,54 @@ function renderHeader(currentId) {
     const others = PIXEL_PARTY_GAMES.filter((g) => g.id !== currentId);
     location.href = others[Math.floor(Math.random() * others.length)].page;
   });
+
+  showSkin();
+  showWallet();
+  // "storage" fires when a game in the frame (or another tab) changes the save;
+  // "pixelparty:change" fires for changes made on this page, like a purchase.
+  window.addEventListener("storage", (e) => {
+    if (e.key === PixelParty.KEYS.tokens) showWallet();
+    if (e.key === PixelParty.KEYS.skin) showSkin();
+  });
+  window.addEventListener("pixelparty:change", () => {
+    showWallet();
+    showSkin();
+  });
+}
+
+// The logo and favicon wear whichever bun skin is equipped.
+function showSkin() {
+  const svg = PixelParty.bunSVG();
+  document.getElementById("logo-bun").innerHTML = svg;
+  let favicon = document.querySelector('link[rel="icon"]');
+  if (!favicon) {
+    favicon = document.createElement("link");
+    favicon.rel = "icon";
+    document.head.appendChild(favicon);
+  }
+  favicon.type = "image/svg+xml";
+  favicon.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+let shownTokens = null;
+
+function showWallet() {
+  const wallet = document.getElementById("wallet");
+  const total = PixelParty.tokens();
+  wallet.innerHTML = `${icon("toll")}<span>${total.toLocaleString()}</span>`;
+  wallet.setAttribute("aria-label", `${total} tokens`);
+  if (shownTokens !== null && total > shownTokens) {
+    const pop = document.createElement("span");
+    pop.className = "token-pop";
+    pop.textContent = `+${total - shownTokens}`;
+    pop.setAttribute("aria-hidden", "true");
+    wallet.appendChild(pop);
+    pop.addEventListener("animationend", () => pop.remove());
+  }
+  if (shownTokens !== null && total !== shownTokens) {
+    wallet.classList.remove("bump");
+    void wallet.offsetWidth; // restart the animation
+    wallet.classList.add("bump");
+  }
+  shownTokens = total;
 }

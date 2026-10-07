@@ -1,4 +1,16 @@
 (() => {
+  // Bun colors come from the skin picked in the Pixel Party shop (classic if played standalone).
+  const SKIN = (window.PixelParty && window.PixelParty.skin()) || {
+    shape: "M 18 220 C 20 130, 72 22, 135 22 C 198 22, 250 130, 252 220 L 252 237 L 18 237 Z",
+    top: 22,
+    stops: ["#ffffff", "#fff6c2", "#ffe566", "#f5c842"],
+    outline: "#e6b422",
+  };
+  // The player's body: the skin's shape in the same 270x255 space as BUN_PATH.
+  const PLAYER_PATH = new Path2D(SKIN.shape);
+  const drawSkinDecor = () => window.PixelParty && window.PixelParty.drawDecor(ctx, SKIN);
+  // Tokens go into the Pixel Party wallet; does nothing if the game is opened on its own.
+  const earnTokens = (n) => window.PixelParty && window.PixelParty.earn(n);
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
@@ -855,6 +867,7 @@
       if (aabb(player, hit)) {
         coin.taken = true;
         coins += 1;
+        earnTokens(1);
         spawnCoinSparkle(coin.x, coin.y);
         sfx.coin();
         updateHud();
@@ -922,6 +935,8 @@
     const pole = { x: flag.x, y: flag.y, w: flag.w, h: flag.h };
     if (aabb(player, pole)) {
       state = "won";
+      // Finishing pays a bonus of one token per second left on the clock.
+      earnTokens(Math.ceil(timeLeft));
       player.vx = 0;
       stopMusic();
       sfx.win();
@@ -1425,17 +1440,18 @@
     ctx.translate(-135, -127.5);
 
     const bunGradient = ctx.createLinearGradient(0, 0, 0, 255);
-    bunGradient.addColorStop(0, "#ffffff");
-    bunGradient.addColorStop(0.5, "#fff6c2");
-    bunGradient.addColorStop(0.78, "#ffe566");
-    bunGradient.addColorStop(1, "#f5c842");
+    bunGradient.addColorStop(0, SKIN.stops[0]);
+    bunGradient.addColorStop(0.5, SKIN.stops[1]);
+    bunGradient.addColorStop(0.78, SKIN.stops[2]);
+    bunGradient.addColorStop(1, SKIN.stops[3]);
     ctx.fillStyle = bunGradient;
-    ctx.fill(BUN_PATH);
+    ctx.fill(PLAYER_PATH);
     ctx.lineWidth = 10;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    ctx.strokeStyle = "#e6b422";
-    ctx.stroke(BUN_PATH);
+    ctx.strokeStyle = SKIN.outline;
+    ctx.stroke(PLAYER_PATH);
+    drawSkinDecor();
     ctx.restore();
 
     // Tiny eyes facing right.
@@ -1721,18 +1737,19 @@
 
     const lowerStart = 255 * 0.5;
     const bunGradient = ctx.createLinearGradient(0, 0, 0, 255);
-    bunGradient.addColorStop(0, "#ffffff");
-    bunGradient.addColorStop(lowerStart / 255, "#fff6c2");
-    bunGradient.addColorStop(0.78, "#ffe566");
-    bunGradient.addColorStop(1, "#f5c842");
+    bunGradient.addColorStop(0, SKIN.stops[0]);
+    bunGradient.addColorStop(lowerStart / 255, SKIN.stops[1]);
+    bunGradient.addColorStop(0.78, SKIN.stops[2]);
+    bunGradient.addColorStop(1, SKIN.stops[3]);
 
     ctx.fillStyle = bunGradient;
-    ctx.fill(BUN_PATH);
+    ctx.fill(PLAYER_PATH);
     ctx.lineWidth = 10;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    ctx.strokeStyle = "#e6b422";
-    ctx.stroke(BUN_PATH);
+    ctx.strokeStyle = SKIN.outline;
+    ctx.stroke(PLAYER_PATH);
+    drawSkinDecor();
 
     ctx.scale(1 / bunScaleX, 1 / bunScaleY);
     ctx.translate(-x, -y);
@@ -1751,7 +1768,7 @@
 
     if (player.big) {
       // Hat sits on the bun crown so the player reads taller without stretching.
-      const bunTop = y + (22 / 255) * h;
+      const bunTop = y + (SKIN.top / 255) * h;
       const hatSize = visualW * 0.92;
       drawHardHat(x + visualW / 2, bunTop - hatSize * 0.12, hatSize, player.facing);
     }

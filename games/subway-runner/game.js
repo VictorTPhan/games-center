@@ -1,4 +1,16 @@
 (() => {
+  // Bun colors come from the skin picked in the Pixel Party shop (classic if played standalone).
+  const SKIN = (window.PixelParty && window.PixelParty.skin()) || {
+    shape: "M 18 220 C 20 130, 72 22, 135 22 C 198 22, 250 130, 252 220 L 252 237 L 18 237 Z",
+    top: 22,
+    stops: ["#ffffff", "#fff6c2", "#ffe566", "#f5c842"],
+    outline: "#e6b422",
+  };
+  // The player's body: the skin's shape in the same 270x255 space as BUN_PATH.
+  const PLAYER_PATH = new Path2D(SKIN.shape);
+  const drawSkinDecor = () => window.PixelParty && window.PixelParty.drawDecor(ctx, SKIN);
+  // Tokens go into the Pixel Party wallet; does nothing if the game is opened on its own.
+  const earnTokens = (n) => window.PixelParty && window.PixelParty.earn(n);
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
@@ -677,6 +689,8 @@
       if (Math.abs(player.y + player.floor + 0.5 - c.y) > 0.9) continue;
       c.taken = true;
       coins += 1;
+      // One token for every 10 coins picked up.
+      if (coins % 10 === 0) earnTokens(1);
       coinStreak = coinStreakTimer > 0 ? coinStreak + 1 : 0;
       coinStreakTimer = 0.45;
       spawnSparkles(laneX(c.lane), c.y, c.z);
@@ -1214,16 +1228,17 @@
     ctx.translate(-50, -100);
     ctx.scale(k, k);
     const g = ctx.createLinearGradient(0, 0, 0, 255);
-    g.addColorStop(0, "#ffffff");
-    g.addColorStop(0.5, "#fff6c2");
-    g.addColorStop(0.78, "#ffe566");
-    g.addColorStop(1, "#f5c842");
+    g.addColorStop(0, SKIN.stops[0]);
+    g.addColorStop(0.5, SKIN.stops[1]);
+    g.addColorStop(0.78, SKIN.stops[2]);
+    g.addColorStop(1, SKIN.stops[3]);
     ctx.fillStyle = g;
-    ctx.fill(BUN_PATH);
+    ctx.fill(PLAYER_PATH);
     ctx.lineWidth = 10;
     ctx.lineJoin = "round";
-    ctx.strokeStyle = "#e6b422";
-    ctx.stroke(BUN_PATH);
+    ctx.strokeStyle = SKIN.outline;
+    ctx.stroke(PLAYER_PATH);
+    drawSkinDecor();
     ctx.restore();
 
     if (facingFront) {

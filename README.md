@@ -13,12 +13,15 @@ index.html            Homepage menu: one card per game
 flag-rush.html        Play page: site header + the game in a frame
 bun-survivor.html     Play page
 bun-express.html      Play page
+shop.html             Shop: bun skins and site themes, bought with tokens
 assets/
-  games.js            Game list + shared header (nav, mute, random), used by every page
+  party.js            Save data shared by the site and the games: tokens, purchases, skin, theme
+  games.js            Game list + shared header (nav, wallet, mute, random), used by every page
   play.js             Fills in a play page, loads the game, and hooks its audio up to mute
-  sky.js              Menu backdrop: the games' sky (gradient, tile grid, drifting clouds)
+  sky.js              Backdrop: the games' sky (gradient, tile grid, drifting clouds), per theme
+  shop.js             Renders the shop and handles buying / equipping
   site.css            Shared styles (Outfit body text, Press Start 2P names, HUD-style header)
-  bun.svg             Logo + favicon: the player bun from the games' own BUN_PATH
+  bun.svg             Default favicon; the live logo/favicon is drawn by party.js in the equipped skin
   *.jpg / *.webp      Card art (still frame + hover animation), cut from the L1-2 preview GIFs
 games/                The three L1-2 games (see changes below)
   mario-platformer/   Flag Rush
@@ -31,6 +34,8 @@ Changes from the originals:
 
 - Flag Rush got a start screen matching the other two (it used to drop straight into play).
 - The one-line goal on each start screen was rewritten as a full sentence.
+- Each game loads `../../assets/party.js`, draws the player as the equipped skin, and pays out tokens
+  (see below). Opened on their own, the games still run; they just use the classic bun.
 
 ## Project requirements → where they're met
 
@@ -56,5 +61,23 @@ distance) are read from `localStorage` and shown on the cards. Flag Rush doesn't
 The header's mute button silences every game without touching game code: `play.js` routes the game's
 `AudioContext` output through a gain node it controls. The setting is saved in `localStorage`.
 
-Not included: the Expand phase (points earned from games + a shop). That needs the games to
-award points, which means editing the game code.
+## Expand phase: tokens + shop
+
+| Upgrade goal (Expand It) | In this build |
+|---|---|
+| Points system | **Tokens**, one wallet for the whole site, shown in the header |
+| Earn points by playing | Flag Rush: 1 per coin + 1 per second left when you reach the flag. Bun Express: 1 per 10 coins. Bun Survivor: 5 per round cleared |
+| Shop page | `shop.html`, linked from the header |
+| Spend points on items | 6 character skins (60–400) and 3 site themes (Sunset free, Night Sky 200, Retro 300) |
+| Items do something | Skins change the player character in all three games, plus the logo and favicon; themes restyle the whole site |
+| Save with `localStorage` | `party.js` stores tokens, purchases, and the equipped skin/theme |
+| Static, account-free | No server or login; everything lives in the browser |
+
+A good run earns roughly 20–30 tokens in any game, so cheap skins take a couple of runs and the
+Gold Star skin is a long-term goal.
+
+Skins: Bun (free), Strawberry, Mochi, Blueberry, Choco Block, Gold Star. Each is a shape in the
+games' 270x255 bun space with a flat base at y=237 (see `SKINS` in `party.js`), so the games'
+eyes, feet, hitboxes, and animations work unchanged. Enemies and Flag Rush's hard hat still use
+the original bun shape. Tokens earned inside a game frame update the header wallet live
+(the browser's `storage` event), with a small "+N" pop.
