@@ -1561,7 +1561,7 @@
     ctx.fillText("A / D OR LEFT / RIGHT — SWITCH LANES", VIEW_W / 2, 176);
     ctx.fillText("W / UP / SPACE — JUMP", VIEW_W / 2, 204);
     ctx.fillText("ON TOUCH: SWIPE TO STEER, TAP TO JUMP", VIEW_W / 2, 232);
-    ctx.fillText("DODGE TRAINS. JUMP BARRIERS. RUN THROUGH PIPES.", VIEW_W / 2, 272);
+    ctx.fillText("DODGE THE TRAINS AND HOP THE BARRIERS, BUT RUN RIGHT THROUGH THE PIPES", VIEW_W / 2, 272);
     if (best > 0) {
       ctx.fillStyle = "#ffc857";
       ctx.fillText(`BEST RUN ${best} M`, VIEW_W / 2, 312);

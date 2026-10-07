@@ -1,8 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
-  <!-- Pixel bun: the hero of all three games -->
-  <path fill="#c9a008" d="M13 3h6v2h2v2h2v3h2v4h1v6h1v6h-1v2h-2v1H9v-1H7v-2H6v-6h1v-6h1v-4h2V7h2V5h1z"/>
-  <path fill="#ffd23f" d="M14 5h4v2h2v2h2v3h2v4h1v6h1v4h-1v1h-2v1H10v-1H8v-1H7v-4h1v-6h1v-4h2V9h2V7h1z"/>
-  <path fill="#fff3b0" d="M13 9h2v2h-2zM11 12h2v3h-2z"/>
-  <path fill="#1f2a37" d="M12 17h2v3h-2zM18 17h2v3h-2z"/>
-  <path fill="#ff8fb8" d="M10 21h2v1h-2zM20 21h2v1h-2z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 50">
+  <!-- The player bun exactly as Flag Rush draws it at one 48px tile (drawPlayer, facing forward):
+       BUN_PATH in its 270x255 space scaled to 48x48, same gradient, outline, eyes, and feet. -->
+  <defs>
+    <linearGradient id="bun" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="255">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="0.5" stop-color="#fff6c2" />
+      <stop offset="0.78" stop-color="#ffe566" />
+      <stop offset="1" stop-color="#f5c842" />
+    </linearGradient>
+  </defs>
+  <g transform="scale(0.177778 0.188235)">
+    <path d="M 18 220 C 20 130, 72 22, 135 22 C 198 22, 250 130, 252 220 L 252 237 L 18 237 Z"
+          fill="url(#bun)" stroke="#e6b422" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+  </g>
+  <g fill="#111">
+    <circle cx="19.2" cy="20.64" r="2.6" />
+    <circle cx="28.8" cy="20.64" r="2.6" />
+    <rect x="12.96" y="45.61" width="5.76" height="3.36" rx="1.68" />
+    <rect x="29.28" y="45.61" width="5.76" height="3.36" rx="1.68" />
+  </g>
 </svg>

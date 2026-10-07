@@ -1,23 +1,20 @@
 /* Pixel Party — shared styles.
-   Borrowed straight from the games: the sunset sky, the cream HUD chips with
-   burnt-orange borders, Press Start 2P lettering, and the blue ground tiles. */
+   Borrowed from the games: the sunset sky, the cream HUD panels with burnt-orange
+   borders, Press Start 2P for names, and the blue ground tiles. Body text is Outfit. */
 
 :root {
-  --sky-top: #ff8a2b;
-  --sky-bottom: #fff3b0;
   --ink: #1f2a37;
   --muted: #4b5c6b;
   --cream: #fffdf8;
-  --cream-deep: #ffe8ba;
   --accent: #e85d04;
   --accent-dark: #c44d03;
   --coin: #f7d21e;
-  --coin-dark: #c9a008;
   --tile: #2f7de0;
   --tile-dark: #1d5fb8;
   --shadow: rgba(31, 42, 55, 0.18);
+  --hud: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(255, 232, 186, 0.92));
   --pixel: "Press Start 2P", monospace;
-  --round: "Arial Rounded MT Bold", "Avenir Next Rounded", "Century Gothic", "Nunito", sans-serif;
+  --body: "Outfit", system-ui, sans-serif;
 }
 
 * {
@@ -25,14 +22,14 @@
 }
 
 html {
-  background: var(--sky-top);
+  background: #ff8a2b;
 }
 
 body {
   margin: 0;
   color: var(--ink);
-  font-family: var(--round);
-  line-height: 1.45;
+  font-family: var(--body);
+  line-height: 1.5;
 }
 
 a {
@@ -49,170 +46,165 @@ img {
   outline-offset: 3px;
 }
 
-/* ---------- HUD chip: the cream panel every game draws in its corners ---------- */
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border: 2px solid var(--accent-dark);
-  border-radius: 8px;
-  background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(255, 232, 186, 0.92));
-  color: var(--ink);
-  font-family: var(--pixel);
-  font-size: 11px;
-  line-height: 1;
-  text-decoration: none;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
   white-space: nowrap;
 }
 
-a.chip,
-button.chip {
-  cursor: pointer;
-  box-shadow: 0 3px 0 var(--accent-dark);
-  transition: transform 80ms ease, box-shadow 80ms ease, filter 120ms ease;
+.material-symbols-rounded {
+  font-size: 20px;
+  line-height: 1;
+  font-variation-settings: "FILL" 1, "wght" 500, "GRAD" 0, "opsz" 24;
+  user-select: none;
 }
 
-a.chip:hover,
-button.chip:hover {
-  filter: brightness(1.04);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 0 var(--accent-dark);
-}
+/* ================================ HEADER ================================ */
+/* Styled like the cream HUD panels each game draws in its corners. */
 
-a.chip:active,
-button.chip:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 var(--accent-dark);
-}
-
-button.chip {
-  appearance: none;
-}
-
-.coin {
-  width: 12px;
-  height: 16px;
-  flex: none;
-  border-radius: 50%;
-  background: var(--coin);
-  box-shadow: inset -3px 0 0 var(--coin-dark);
-}
-
-kbd {
-  display: inline-block;
-  min-width: 1.9em;
-  padding: 4px 6px 3px;
-  border: 1px solid #b8c5d0;
-  border-bottom-width: 3px;
-  border-radius: 5px;
-  background: #f4f7fa;
-  color: var(--ink);
-  font-family: var(--pixel);
-  font-size: 9px;
-  line-height: 1.2;
-  text-align: center;
-}
-
-kbd + kbd {
-  margin-left: 3px;
-}
-
-/* ================================ MENU PAGE ================================ */
-
-.menu {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  background:
-    radial-gradient(ellipse at 18% 0%, rgba(255, 248, 232, 0.65) 0%, transparent 45%),
-    linear-gradient(180deg, var(--sky-top) 0%, #ffb04d 45%, var(--sky-bottom) 100%);
-}
-
-/* Drifting sky blocks, like the white squares behind every level. */
-.sky {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.sky span {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.55);
-  border-radius: 3px;
-  animation: drift linear infinite;
-}
-
-@keyframes drift {
-  from { transform: translateX(0); }
-  to { transform: translateX(-110vw); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sky span { animation: none; }
-}
-
-.topbar {
-  position: relative;
-  z-index: 1;
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  width: min(1180px, 100%);
-  margin: 0 auto;
-  padding: 22px 20px 0;
+  gap: 24px;
+  padding: 10px max(16px, calc((100% - 1180px) / 2 + 20px));
+  background: var(--hud);
+  border-bottom: 2px solid var(--accent-dark);
+  box-shadow: 0 4px 14px var(--shadow);
 }
 
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  color: #fff;
+  gap: 12px;
+  flex: none;
   text-decoration: none;
   font-family: var(--pixel);
-  font-size: clamp(16px, 3.4vw, 26px);
-  letter-spacing: 1px;
-  text-shadow: 3px 3px 0 var(--accent-dark), 0 0 0 transparent;
+  font-size: 15px;
+  color: var(--ink);
 }
 
 .logo img {
-  width: clamp(36px, 6vw, 52px);
+  width: 40px;
   height: auto;
-  image-rendering: pixelated;
-  filter: drop-shadow(3px 3px 0 rgba(196, 77, 3, 0.55));
-  animation: hop 2.4s ease-in-out infinite;
 }
 
-@keyframes hop {
-  0%, 70%, 100% { transform: translateY(0); }
-  80% { transform: translateY(-8px); }
-  90% { transform: translateY(0) scaleY(0.92); }
+.site-nav {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .logo img { animation: none; }
+.site-nav a {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--muted);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.site-nav a:hover {
+  color: var(--ink);
+  background: rgba(232, 93, 4, 0.1);
+}
+
+.site-nav a[aria-current="page"] {
+  color: #fff;
+  background: var(--tint);
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex: none;
+}
+
+.icon-btn {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 2px solid var(--accent-dark);
+  border-radius: 8px;
+  background: var(--hud);
+  color: var(--accent-dark);
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--accent-dark);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--accent-dark);
+}
+
+.icon-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--accent-dark);
+}
+
+.icon-btn .material-symbols-rounded {
+  font-size: 24px;
+}
+
+@media (max-width: 880px) {
+  .site-header {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+  }
+
+  .site-nav {
+    order: 3;
+    width: 100%;
+    margin: 0;
+    justify-content: space-between;
+  }
+
+  .site-nav a {
+    padding: 6px 10px;
+    font-size: 15px;
+  }
+
+  .header-actions {
+    margin-left: auto;
+  }
+}
+
+/* ================================ MENU PAGE ================================ */
+
+.menu {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* The game sky, drawn by sky.js, fixed behind everything. */
+#sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
 }
 
 .games {
-  position: relative;
-  z-index: 1;
   flex: 1;
   width: min(1180px, 100%);
   margin: 0 auto;
-  padding: 34px 20px 72px;
-}
-
-.games h1 {
-  margin: 0 0 22px;
-  color: var(--ink);
-  font-family: var(--pixel);
-  font-size: clamp(13px, 2vw, 16px);
-  letter-spacing: 1px;
+  padding: 40px 20px 72px;
 }
 
 .grid {
@@ -226,6 +218,7 @@ kbd + kbd {
 }
 
 @media (max-width: 640px) {
+  .games { padding-top: 24px; }
   .grid { grid-template-columns: 1fr; }
 }
 
@@ -233,10 +226,8 @@ kbd + kbd {
 
 .card {
   --tint: var(--tile);
-  position: relative;
   display: flex;
   flex-direction: column;
-  border: 3px solid #fff;
   border-radius: 14px;
   background: var(--cream);
   box-shadow: 0 6px 0 rgba(196, 77, 3, 0.35), 0 14px 30px var(--shadow);
@@ -283,111 +274,82 @@ kbd + kbd {
   opacity: 1;
 }
 
-.shot .ribbon {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 9px;
-  padding: 7px 9px;
-}
-
 .card-body {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 12px;
-  padding: 18px 18px 20px;
-  border-top: 5px solid var(--tint);
-}
-
-.card-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
   gap: 10px;
+  padding: 18px 20px 20px;
+  border-top: 5px solid var(--tint);
 }
 
 .card h2 {
   margin: 0;
   font-family: var(--pixel);
   font-size: 15px;
-  line-height: 1.35;
+  font-weight: 400;
+  line-height: 1.4;
   color: var(--ink);
-}
-
-.genre {
-  flex: none;
-  color: var(--tint);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .card p {
   margin: 0;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .card-foot {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 10px;
   margin-top: auto;
-  padding-top: 6px;
+  padding-top: 8px;
 }
 
 .best {
-  font-size: 9px;
-  padding: 8px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.best .material-symbols-rounded {
+  color: #c9a008;
 }
 
 .play {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   margin-left: auto;
-  padding: 12px 18px;
+  padding: 9px 20px 9px 14px;
   border-radius: 999px;
   background: var(--accent);
   color: #fff;
-  font-family: var(--pixel);
-  font-size: 11px;
+  font-weight: 700;
+  font-size: 16px;
   box-shadow: 0 4px 0 var(--accent-dark);
+}
+
+.play .material-symbols-rounded {
+  font-size: 22px;
 }
 
 .card:hover .play {
   filter: brightness(1.06);
 }
 
-.play::after {
-  content: "";
-  width: 0;
-  height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 7px solid #fff;
-}
-
 /* ---------- Ground: the blue brick floor from Flag Rush ---------- */
 
 .ground {
-  position: relative;
-  z-index: 1;
   height: 64px;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.28) 2px, transparent 2px) 0 0 / 32px 32px,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.28) 2px, transparent 2px) 0 0 / 32px 32px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.28) 2px, transparent 2px) 0 0 / 48px 32px,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28) 2px, transparent 2px) 0 0 / 48px 32px,
     linear-gradient(180deg, var(--tile) 0%, var(--tile-dark) 100%);
   border-top: 3px solid #5d9cf0;
-  color: #fff;
-  font-family: var(--pixel);
-  font-size: 9px;
-  display: grid;
-  place-items: center;
-  letter-spacing: 1px;
 }
 
 /* ================================ PLAY PAGE ================================ */
@@ -419,61 +381,6 @@ kbd + kbd {
     linear-gradient(180deg, #fff0f6 0%, #fbd9e8 100%);
 }
 
-.play-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px 0;
-}
-
-.play-bar .title {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0;
-  font-family: var(--pixel);
-  font-size: 13px;
-  font-weight: 400;
-}
-
-.play-bar .title img {
-  width: 26px;
-  image-rendering: pixelated;
-}
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 16px;
-  margin: 0 0 0 auto;
-  padding: 0;
-  list-style: none;
-}
-
-.controls li {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.controls .or {
-  margin: 0 4px;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.controls .label {
-  margin-left: 6px;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.play-bar .next {
-  margin-left: 4px;
-}
-
 .frame {
   flex: 1;
   min-height: 0;
@@ -481,14 +388,4 @@ kbd + kbd {
   border: 0;
   display: block;
   background: transparent;
-}
-
-@media (max-width: 860px) {
-  .controls { display: none; }
-  .play-bar .title { margin-right: auto; }
-}
-
-@media (max-width: 480px) {
-  .play-bar .title span { display: none; }
-  .play-bar .next .full { display: none; }
 }

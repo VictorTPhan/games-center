@@ -531,6 +531,13 @@
 
   function updateHud() {}
 
+  // Fresh level behind the title card; play begins on the first Space/Enter/click.
+  function showTitle() {
+    startGame();
+    state = "title";
+    stopMusic();
+  }
+
   function startGame() {
     resetPlayer(true);
     timeLeft = LEVEL_TIME;
@@ -1856,6 +1863,35 @@
     ctx.restore();
   }
 
+  function drawTitleScreen() {
+    if (state !== "title") return;
+    ctx.save();
+    ctx.fillStyle = "rgba(20, 32, 44, 0.52)";
+    ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const cx = VIEW_W / 2;
+    const cy = VIEW_H / 2;
+    drawCoinIcon(cx - 120, cy - 152 + Math.cos(animTime * 4 + 1) * 4, 1.6);
+    drawPlayerIcon(cx, cy - 152 + Math.sin(animTime * 4) * 4, 64);
+    drawCoinIcon(cx + 120, cy - 152 + Math.cos(animTime * 4) * 4, 1.6);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = `36px "Press Start 2P", monospace`;
+    ctx.fillText("FLAG RUSH", cx, cy - 62);
+
+    ctx.font = `12px "Press Start 2P", monospace`;
+    ctx.fillText("A / D OR LEFT / RIGHT — RUN", cx, cy - 2);
+    ctx.fillText("W / UP / SPACE — JUMP     R — RESTART", cx, cy + 26);
+    ctx.fillText("RACE THE CLOCK TO THE FLAGPOLE AND GRAB COINS ALONG THE WAY", cx, cy + 54);
+    if (Math.floor(animTime * 2) % 2 === 0) {
+      ctx.font = `16px "Press Start 2P", monospace`;
+      ctx.fillText("PRESS SPACE OR CLICK TO START", cx, cy + 150);
+    }
+    ctx.restore();
+  }
+
   function draw() {
     syncCanvasResolution();
     drawSky();
@@ -1875,6 +1911,7 @@
     drawGameHud();
     drawDeathTransition();
     drawEndState();
+    drawTitleScreen();
   }
 
   function update(dt) {
@@ -1914,8 +1951,25 @@
     requestAnimationFrame(frame);
   }
 
+  function startFromTitle() {
+    startGame();
+    // The key that started the run shouldn't also register as a jump.
+    jumpKeyWasDown = true;
+  }
+
+  canvas.addEventListener("click", () => {
+    if (state !== "title") return;
+    ensureAudio();
+    startFromTitle();
+  });
+
   window.addEventListener("keydown", (e) => {
     ensureAudio();
+    if (state === "title" && (e.key === " " || e.key === "Enter")) {
+      e.preventDefault();
+      startFromTitle();
+      return;
+    }
     if (state === "playing") startMusic();
     keys.add(e.key);
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
@@ -1934,7 +1988,7 @@
   loadLevelFromImage(LEVEL_IMAGE_URL)
     .then(() => {
       buildLevel();
-      startGame();
+      showTitle();
       requestAnimationFrame(frame);
     })
     .catch((err) => {

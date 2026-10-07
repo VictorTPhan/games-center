@@ -2224,7 +2224,7 @@
     ctx.font = `12px ${FONT}`;
     ctx.fillText("WASD / ARROWS — MOVE", VIEW_W / 2, 268);
     ctx.fillText("MOUSE — AIM     CLICK — SHOOT", VIEW_W / 2, 296);
-    ctx.fillText("CLEAR EVERY ROUND. PICK A BUFF. SURVIVE.", VIEW_W / 2, 324);
+    ctx.fillText("CLEAR EACH WAVE AND PICK A BUFF BEFORE THE NEXT ONE ARRIVES", VIEW_W / 2, 324);
     if (bestRound > 0) {
       ctx.fillStyle = "#ffc857";
       ctx.fillText(`BEST ROUND ${bestRound}`, VIEW_W / 2, 364);
